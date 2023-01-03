@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of Google SEO plugin for MyBB.
  * Copyright (C) 2008-2011 Andreas Klauer <Andreas.Klauer@metamorpher.de>
@@ -19,7 +20,7 @@
  */
 
 // Disallow direct access to this file for security reasons
-if(!defined("IN_MYBB"))
+if (!defined("IN_MYBB"))
 {
     die("Direct initialization of this file is not allowed.<br /><br />
          Please make sure IN_MYBB is defined.");
@@ -45,18 +46,21 @@ function google_seo_redirect_current_url()
     $page_url = parse_url($settings['bburl'], PHP_URL_SCHEME);
 
     // Option 1: use HTTPS header
-    if($settings['google_seo_redirect_https'] == 'HTTPS') {
+    if ($settings['google_seo_redirect_https'] == 'HTTPS')
+    {
         $page_url = "http";
 
-        if($_SERVER['HTTPS'] != "off" && ($_SERVER['HTTPS'] || $_SERVER['SERVER_PORT'] == 443))
+        if ($_SERVER['HTTPS'] != "off" && ($_SERVER['HTTPS'] || $_SERVER['SERVER_PORT'] == 443))
         {
             $page_url = "https";
         }
     }
 
     // Option 2: use FORWARDED_PROTO header (only if set, else ignore)
-    else if($settings['google_seo_redirect_https'] == 'HTTP_X_FORWARDED_PROTO') {
-        if($_SERVER['HTTP_X_FORWARDED_PROTO']) {
+    else if ($settings['google_seo_redirect_https'] == 'HTTP_X_FORWARDED_PROTO')
+    {
+        if ($_SERVER['HTTP_X_FORWARDED_PROTO'])
+        {
             $page_url = $_SERVER['HTTP_X_FORWARDED_PROTO'];
         }
     }
@@ -83,27 +87,27 @@ function google_seo_redirect_hook()
 {
     global $db, $mybb, $settings, $plugins, $google_seo_redirect;
 
-    if($mybb->request_method == "post")
+    if ($mybb->request_method == "post")
     {
         // Never touch posts.
         return;
     }
 
     // Build the target URL we should be at:
-    switch(THIS_SCRIPT)
+    switch (THIS_SCRIPT)
     {
         case 'forumdisplay.php':
             $fid = (int)$mybb->get_input('fid');
             $page = (int)$mybb->get_input('page');
 
-            if($fid)
+            if ($fid)
             {
                 // forum as index tweak
-                if($fid == $settings['google_seo_tweak_index_fid'])
+                if ($fid == $settings['google_seo_tweak_index_fid'])
                 {
                     $target = "";
 
-                    if($page > 1)
+                    if ($page > 1)
                     {
                         $target = "?page={$page}";
                     }
@@ -126,11 +130,13 @@ function google_seo_redirect_hook()
         case 'showthread.php':
             // pid overrules tid, so we must check pid first,
             // even at the cost of an additional query.
-            if((int)$mybb->get_input('pid'))
+            if ((int)$mybb->get_input('pid'))
             {
-                $tid = google_seo_tid((int)$mybb->get_input('pid'),
-                                      (int)$mybb->get_input('tid'),
-                                      $settings['google_seo_redirect_posts']);
+                $tid = google_seo_tid(
+                    (int)$mybb->get_input('pid'),
+                    (int)$mybb->get_input('tid'),
+                    $settings['google_seo_redirect_posts']
+                );
                 $target = get_post_link((int)$mybb->get_input('pid'), $tid);
                 $kill['pid'] = '';
                 $kill['tid'] = '';
@@ -138,17 +144,19 @@ function google_seo_redirect_hook()
                 $kill['google_seo'] = '';
             }
 
-            else if((int)$mybb->get_input('tid'))
+            else if ((int)$mybb->get_input('tid'))
             {
-                $target = get_thread_link((int)$mybb->get_input('tid'),
-                                          (int)$mybb->get_input('page'),
-                                          (string)$mybb->get_input('action'));
+                $target = get_thread_link(
+                    (int)$mybb->get_input('tid'),
+                    (int)$mybb->get_input('page'),
+                    (string)$mybb->get_input('action')
+                );
                 $kill['tid'] = '';
                 $kill['action'] = '';
                 $kill['google_seo_thread'] = '';
                 $kill['google_seo'] = '';
 
-                if($mybb->get_input('page') != 'last')
+                if ($mybb->get_input('page') != 'last')
                 {
                     $kill['page'] = '';
                 }
@@ -157,7 +165,7 @@ function google_seo_redirect_hook()
             break;
 
         case 'announcements.php':
-            if((int)$mybb->get_input('aid'))
+            if ((int)$mybb->get_input('aid'))
             {
                 $target = get_announcement_link((int)$mybb->get_input('aid'));
                 $kill['aid'] = '';
@@ -168,10 +176,12 @@ function google_seo_redirect_hook()
             break;
 
         case 'member.php':
-            if((int)$mybb->get_input('uid'))
+            if ((int)$mybb->get_input('uid'))
             {
-                if($settings['google_seo_redirect_litespeed']
-                   && $mybb->get_input('action') != 'profile')
+                if (
+                    $settings['google_seo_redirect_litespeed']
+                    && $mybb->get_input('action') != 'profile'
+                )
                 {
                     // Work around rewrite bug in LiteSpeed (double action conflict).
                     break;
@@ -182,7 +192,7 @@ function google_seo_redirect_hook()
                 $kill['google_seo_user'] = '';
                 $kill['google_seo'] = '';
 
-                if($mybb->get_input('action') == 'profile')
+                if ($mybb->get_input('action') == 'profile')
                 {
                     $kill['action'] = '';
                 }
@@ -191,10 +201,12 @@ function google_seo_redirect_hook()
             break;
 
         case 'calendar.php':
-            if((int)$mybb->get_input('eid'))
+            if ((int)$mybb->get_input('eid'))
             {
-                if($settings['google_seo_redirect_litespeed']
-                   && $mybb->get_input('action') != 'profile')
+                if (
+                    $settings['google_seo_redirect_litespeed']
+                    && $mybb->get_input('action') != 'profile'
+                )
                 {
                     // Work around rewrite bug in LiteSpeed (double action conflict).
                     break;
@@ -205,7 +217,7 @@ function google_seo_redirect_hook()
                 $kill['google_seo_event'] = '';
                 $kill['google_seo'] = '';
 
-                if($mybb->get_input('action') == 'event')
+                if ($mybb->get_input('action') == 'event')
                 {
                     $kill['action'] = '';
                 }
@@ -213,21 +225,29 @@ function google_seo_redirect_hook()
 
             else
             {
-                if(!(int)$mybb->get_input('calendar'))
+                if (!(int)$mybb->get_input('calendar'))
                 {
                     // Special case: Default calendar.
                     // Code taken from calendar.php
-                    $query = $db->simple_select("calendars", "cid", "",
-                                                array('order_by' => 'disporder',
-                                                      'limit' => 1));
+                    $query = $db->simple_select(
+                        "calendars",
+                        "cid",
+                        "",
+                        array(
+                            'order_by' => 'disporder',
+                            'limit' => 1
+                        )
+                    );
                     $cid = $db->fetch_field($query, "cid");
                     $mybb->input['calendar'] = $cid;
                 }
 
-                if($mybb->get_input('action') == "weekview")
+                if ($mybb->get_input('action') == "weekview")
                 {
-                    $target = get_calendar_week_link((int)$mybb->get_input('calendar'),
-                                                     (int)str_replace('n', '-', $mybb->get_input('week')));
+                    $target = get_calendar_week_link(
+                        (int)$mybb->get_input('calendar'),
+                        (int)str_replace('n', '-', $mybb->get_input('week'))
+                    );
                     $kill['calendar'] = '';
                     $kill['week'] = '';
                     $kill['action'] = '';
@@ -237,10 +257,12 @@ function google_seo_redirect_hook()
 
                 else
                 {
-                    $target = get_calendar_link((int)$mybb->get_input('calendar'),
-                                                (int)$mybb->get_input('year'),
-                                                (int)$mybb->get_input('month'),
-                                                (int)$mybb->get_input('day'));
+                    $target = get_calendar_link(
+                        (int)$mybb->get_input('calendar'),
+                        (int)$mybb->get_input('year'),
+                        (int)$mybb->get_input('month'),
+                        (int)$mybb->get_input('day')
+                    );
                     $kill['calendar'] = '';
                     $kill['year'] = '';
                     $kill['month'] = '';
@@ -254,13 +276,13 @@ function google_seo_redirect_hook()
     }
 
     // Verify that we are already at the target.
-    if(isset($target))
+    if (isset($target))
     {
-        $target = $settings['bburl'].'/'.urldecode($target);
+        $target = $settings['bburl'] . '/' . urldecode($target);
         $current = google_seo_redirect_current_url();
 
         // Not identical (although it may only be the query string).
-        if($current != $target)
+        if ($current != $target)
         {
             // Parse current and target
             $target_parse = explode("?", $target, 2);
@@ -271,11 +293,13 @@ function google_seo_redirect_hook()
             $location_current = $current_parse[0];
 
             // Fix broken query strings (e.g. search.php)
-            $broken_query = preg_replace("/\?([^&?=]+)([=&])/u",
-                                         '&$1$2',
-                                         $current_parse[1]);
+            $broken_query = preg_replace(
+                "/\?([^&?=]+)([=&])/u",
+                '&$1$2',
+                $current_parse[1]
+            );
 
-            if($current_parse[1] != $broken_query)
+            if ($current_parse[1] != $broken_query)
             {
                 $change = 1;
                 $current_parse[2] = $current_parse[1];
@@ -283,12 +307,12 @@ function google_seo_redirect_hook()
             }
 
             // Query
-            $current_dynamic = google_seo_dynamic('?'.$current_parse[1]);
-            $target_dynamic = google_seo_dynamic('?'.$target_parse[1]);
+            $current_dynamic = google_seo_dynamic('?' . $current_parse[1]);
+            $target_dynamic = google_seo_dynamic('?' . $target_parse[1]);
             parse_str(htmlspecialchars_decode($target_parse[1]), $query_target);
             parse_str($current_parse[1], $query_current);
 
-            if(@get_magic_quotes_gpc())
+            if ((ini_get('magic_quotes_gpc') && (strtolower(ini_get('magic_quotes_gpc')) != "off")))
             {
                 // Dear PHP, I don't need magic, thank you very much.
                 $mybb->strip_slashes_array($query_target);
@@ -298,21 +322,21 @@ function google_seo_redirect_hook()
             $query = $query_current;
 
             // Kill query string elements that already are part of the URL.
-            if(!$query[$target_dynamic])
+            if (!$query[$target_dynamic])
             {
                 unset($query[$target_dynamic]);
                 unset($query_current[$target_dynamic]);
                 unset($query_target[$target_dynamic]);
             }
 
-            if(!$query[$current_dynamic])
+            if (!$query[$current_dynamic])
             {
                 unset($query[$current_dynamic]);
                 unset($query_current[$current_dynamic]);
                 unset($query_target[$current_dynamic]);
             }
 
-            foreach($kill as $k=>$v)
+            foreach ($kill as $k => $v)
             {
                 unset($query[$k]);
             }
@@ -320,21 +344,21 @@ function google_seo_redirect_hook()
             // Final query, current parameters retained
             $query = array_merge($query_target, $query);
 
-            if(count($query) != count($query_current))
+            if (count($query) != count($query_current))
             {
                 $change = 2;
             }
 
-            else if($current_dynamic != $target_dynamic)
+            else if ($current_dynamic != $target_dynamic)
             {
                 $change = 3;
             }
 
             else
             {
-                foreach($query as $k=>$v)
+                foreach ($query as $k => $v)
                 {
-                    if($query_current[$k] != $v)
+                    if ($query_current[$k] != $v)
                     {
                         $change = 4;
                     }
@@ -342,13 +366,15 @@ function google_seo_redirect_hook()
             }
 
             // Definitely not identical?
-            if($change || $location_target != $location_current)
+            if ($change || $location_target != $location_current)
             {
                 // Check if redirect debugging is enabled.
-                if($settings['google_seo_redirect_debug']
-                   && $mybb->usergroup['cancp'] == 1)
+                if (
+                    $settings['google_seo_redirect_debug']
+                    && $mybb->usergroup['cancp'] == 1
+                )
                 {
-                    if($query['google_seo_redirect'])
+                    if ($query['google_seo_redirect'])
                     {
                         // print out information about this redirect and return
                         header("Content-type: text/html; charset=UTF-8");
@@ -375,9 +401,12 @@ function google_seo_redirect_hook()
                                     'query_target' => $query_target,
                                     'query_current' => $query_current,
                                     'query' => $query,
-                                    ),
-                                true),
-                            ENT_COMPAT, "UTF-8");
+                                ),
+                                true
+                            ),
+                            ENT_COMPAT,
+                            "UTF-8"
+                        );
                         echo "</pre>";
                         return;
                     }
@@ -391,33 +420,39 @@ function google_seo_redirect_hook()
                 // Redirect but retain query.
                 $querystr = array();
 
-                if($target_dynamic)
+                if ($target_dynamic)
                 {
                     $querystr[] = google_seo_encode($target_dynamic);
                 }
 
-                foreach($query as $k=>$v)
+                foreach ($query as $k => $v)
                 {
-                    if(is_array($v)) {
-                        foreach($v as $arrk=>$arrv) {
-                            $querystr[] = urlencode($k)."[".urlencode($arrk)."]=".urlencode($arrv);
+                    if (is_array($v))
+                    {
+                        foreach ($v as $arrk => $arrv)
+                        {
+                            $querystr[] = urlencode($k) . "[" . urlencode($arrk) . "]=" . urlencode($arrv);
                         }
-                    } else {
-                        $querystr[] = urlencode($k)."=".urlencode($v);
+                    }
+                    else
+                    {
+                        $querystr[] = urlencode($k) . "=" . urlencode($v);
                     }
                 }
 
                 $location_target = google_seo_encode($location_target);
 
-                if(count($querystr))
+                if (count($querystr))
                 {
                     $location_target .= "?" . implode("&", $querystr);
                 }
 
                 $google_seo_redirect = $location_target;
 
-                if($settings['google_seo_redirect_permission'] &&
-                   THIS_SCRIPT != "member.php")
+                if (
+                    $settings['google_seo_redirect_permission'] &&
+                    THIS_SCRIPT != "member.php"
+                )
                 {
                     // Leave permission checks to the current page.
 
@@ -452,7 +487,7 @@ function google_seo_redirect_header()
 
     // Only exit if the headers haven't been sent yet.
     // (i.e. if the headers will be sent on exit).
-    if(!headers_sent())
+    if (!headers_sent())
     {
         // Hack to prevent any unnecessary queries.
         // (Fixes thread views increase by 2 on redirect issue.)
