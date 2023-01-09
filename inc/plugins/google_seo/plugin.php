@@ -376,7 +376,7 @@ function google_seo_plugin_status()
                         {
                             $v[4] = '';
                         }
-    
+
                         $rule = "RewriteRule ^{$rule}\$ {$v[1]}?{$v[4]}{$v[2]}=\$1 [L,QSA,NC]";
                     }
 
@@ -411,19 +411,19 @@ function google_seo_plugin_status()
         $workaround = 'RewriteRule ^([^&]*)&(.*)$ '.$mybb->settings['bburl'].'/$1?$2 [L,QSA,R=301]';
         $pos = strpos($file, "{$workaround}\n");
 
-        if($rewrite && ($pos === false || $pos != strpos($file, "RewriteRule")))
+        if(isset($rewrite) && ($pos === false || $pos != strpos($file, "RewriteRule")))
         {
             array_unshift($lines, "# {$lang->googleseo_plugin_htaccess_search}\n# {$lang->googleseo_plugin_htaccess_search_first}\n{$workaround}\n");
         }
 
         $pos = strpos($file, "RewriteBase {$base}/\n");
 
-        if($rewrite && ($pos === false || $pos > strpos($file, "RewriteRule")))
+        if(isset($rewrite) && ($pos === false || $pos > strpos($file, "RewriteRule")))
         {
             array_unshift($lines, "# {$lang->googleseo_plugin_htaccess_rewritebase}\nRewriteBase {$base}/\n");
         }
 
-        if($rewrite && strpos($file, "RewriteEngine on\n") === false)
+        if(isset($rewrite) && strpos($file, "RewriteEngine on\n") === false)
         {
             array_unshift($lines, "RewriteEngine on\n");
         }
@@ -445,7 +445,7 @@ function google_seo_plugin_status()
     }
 
     // Check if mbstring is available:
-    if($rewrite && !function_exists("mb_internal_encoding"))
+    if(isset($rewrite) && !function_exists("mb_internal_encoding"))
     {
         $warning[] = $lang->googleseo_plugin_warn_mbstring;
     }
@@ -571,7 +571,7 @@ function google_seo_plugin_status()
     $status = "\n<ul>\n$status</ul>\n";
 
     // URL Database info:
-    if($urldb)
+    if(isset($urldb))
     {
         $status .= google_seo_plugin_database($urldb);
     }
@@ -696,7 +696,7 @@ function google_seo_plugin_uninstall()
     $PL or require_once PLUGINLIBRARY;
 
     // Confirmation step.
-    if(!$mybb->input['confirm'])
+    if(!$mybb->get_input('confirm'))
     {
         $link = $PL->url_append('index.php', array(
                                     'module' => 'config-plugins',
@@ -1130,7 +1130,7 @@ function google_seo_plugin_edit()
     // Check for core file edit action
     if(verify_post_check($mybb->get_input('my_post_key')))
     {
-        if($mybb->input['google_seo'] == 'apply')
+        if($mybb->get_input('google_seo') == 'apply')
         {
             if(google_seo_plugin_apply(true) === true)
             {
@@ -1145,7 +1145,7 @@ function google_seo_plugin_edit()
             }
         }
 
-        if($mybb->input['google_seo'] == 'revert')
+        if($mybb->get_input('google_seo') == 'revert')
         {
             if(google_seo_plugin_revert(true) === true)
             {
