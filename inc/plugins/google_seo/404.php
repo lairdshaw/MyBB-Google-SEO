@@ -153,7 +153,7 @@ function google_seo_404(&$error)
     global $mybb, $lang, $settings;
     global $google_seo_404_label;
 
-    if($mybb->input['ajax'])
+    if($mybb->get_input('ajax'))
     {
         // don't mess with ajax
         return;

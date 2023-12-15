@@ -195,7 +195,7 @@ function google_seo_tid($pid, $tid=0, $mode='default', $limit=1)
     global $db, $style, $thread, $post;
     global $google_seo_tid;
 
-    if($google_seo_tid[$pid] === NULL)
+    if($google_seo_tid === NULL || $pid === NULL || !isset($google_seo_tid[$pid]))
     {
         // trust the given tid
         if($tid > 0)
@@ -204,7 +204,7 @@ function google_seo_tid($pid, $tid=0, $mode='default', $limit=1)
         }
 
         // or guess tid
-        else if(is_array($style) && $style['pid'] == $pid && $style['tid'] > 0)
+        else if(is_array($style) && isset($style['pid']) && $style['pid'] == $pid && $style['tid'] > 0)
         {
             $tid = (int)$style['tid'];
         }
@@ -219,7 +219,7 @@ function google_seo_tid($pid, $tid=0, $mode='default', $limit=1)
             $tid = (int)$post['tid'];
         }
 
-        else if($google_seo_tid[-$pid] !== NULL)
+        else if(isset($google_seo_tid[-$pid]) && $google_seo_tid[-$pid] !== NULL)
         {
             $tid = $google_seo_tid[-$pid];
         }

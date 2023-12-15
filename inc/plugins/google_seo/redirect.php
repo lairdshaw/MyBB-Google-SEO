@@ -331,7 +331,7 @@ function google_seo_redirect_hook()
                 unset($query_target[$target_dynamic]);
             }
 
-            if (!$query[$current_dynamic])
+            if(empty($query[$current_dynamic]))
             {
                 unset($query[$current_dynamic]);
                 unset($query_current[$current_dynamic]);
@@ -368,7 +368,7 @@ function google_seo_redirect_hook()
             }
 
             // Definitely not identical?
-            if ($change || $location_target != $location_current)
+            if(!empty($change) || $location_target != $location_current)
             {
                 // Check if redirect debugging is enabled.
                 if (
