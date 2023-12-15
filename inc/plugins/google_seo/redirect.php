@@ -137,6 +137,7 @@ function google_seo_redirect_hook()
                     (int)$mybb->get_input('tid'),
                     $settings['google_seo_redirect_posts']
                 );
+
                 $target = get_post_link((int)$mybb->get_input('pid'), $tid);
                 $kill['pid'] = '';
                 $kill['tid'] = '';
@@ -151,6 +152,7 @@ function google_seo_redirect_hook()
                     (int)$mybb->get_input('page'),
                     (string)$mybb->get_input('action')
                 );
+
                 $kill['tid'] = '';
                 $kill['action'] = '';
                 $kill['google_seo_thread'] = '';
