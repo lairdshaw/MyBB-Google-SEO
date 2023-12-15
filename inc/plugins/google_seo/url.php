@@ -131,8 +131,8 @@ if($google_seo_url[GOOGLE_SEO_FORUM]['scheme'])
     }
 }
 
-   && $settings['google_seo_url_parent_event'])
 if($google_seo_url[GOOGLE_SEO_CALENDAR]['scheme']
+    && $settings['google_seo_url_parent_event'])
 {
     $google_seo_url[GOOGLE_SEO_EVENT]['extra'] .= ',cid AS parent';
     $google_seo_url[GOOGLE_SEO_EVENT]['parent'] = $settings['google_seo_url_parent_event'];
