@@ -28,6 +28,7 @@ if(!defined("IN_MYBB"))
 /* --- Global Variables: --- */
 
 global $db, $mybb, $settings, $plugins, $cache;
+global $google_seo_query_limit, $google_seo_url;
 
 // Required for database queries to the google_seo table. In theory this
 // could be used to coerce Google SEO into managing URLs of other types.
@@ -139,14 +140,12 @@ if($google_seo_url[GOOGLE_SEO_CALENDAR]['scheme']
     $google_seo_url[GOOGLE_SEO_EVENT]['parent_type'] = GOOGLE_SEO_CALENDAR;
 }
 
-@$db->google_seo_url = $google_seo_url;
 // Query limit. Decreases by 1 for every query.
+$google_seo_query_limit = (int)$settings['google_seo_url_query_limit'];
 
-@$db->google_seo_query_limit = (int)$settings['google_seo_url_query_limit'];
-
-if($db->google_seo_query_limit <= 0)
+if($google_seo_query_limit <= 0)
 {
-    $db->google_seo_query_limit = 32767;
+    $google_seo_query_limit = 32767;
 }
 
 // Cache
@@ -378,7 +377,7 @@ function google_seo_url_finalize($url, $scheme)
 function google_seo_url_create($type, $ids)
 {
     global $db, $settings;
-    global $google_seo_url_cache;
+    global $google_seo_url_cache, $google_seo_query_limit, $google_seo_url;
 
     $ids = array_map('intval', (array)$ids);
 
@@ -387,18 +386,18 @@ function google_seo_url_create($type, $ids)
         $google_seo_url_cache[$type][$id] = 0;
     }
 
-    if($db->google_seo_query_limit <= 0)
+    if($google_seo_query_limit <= 0)
     {
         return;
     }
 
-    $data = $db->google_seo_url[$type];
+    $data = $google_seo_url[$type];
 
     // Is Google SEO URL enabled for this type?
     if($data['scheme'])
     {
         // Query the item title as base for our URL.
-        $db->google_seo_query_limit--;
+        $google_seo_query_limit--;
 
         if(!isset($data['extra']))
         {
@@ -458,11 +457,11 @@ function google_seo_url_create($type, $ids)
             // Parents
             if(isset($row['parent']))
             {
-                $parent_type = $db->google_seo_url[$type]['parent_type'];
+                $parent_type = $google_seo_url[$type]['parent_type'];
                 $parent_id = (int)$row['parent'];
 
                 // TODO: Parents costs us an extra query. Cache?
-                $db->google_seo_query_limit--;
+                $google_seo_query_limit--;
                 $query = $db->simple_select('google_seo',
                                             'url AS parent',
                                             "active=1 AND idtype={$parent_type} AND id={$parent_id}");
@@ -470,17 +469,17 @@ function google_seo_url_create($type, $ids)
 
                 if($parent)
                 {
-                    $url = google_seo_expand($db->google_seo_url[$type]['parent'],
+                    $url = google_seo_expand($google_seo_url[$type]['parent'],
                                              array('url' => $url,
                                                    'parent' => $parent));
-                    $uniqueurl = google_seo_expand($db->google_seo_url[$type]['parent'],
+                    $uniqueurl = google_seo_expand($google_seo_url[$type]['parent'],
                                                    array('url' => $url,
                                                          'parent' => $parent));
                 }
             }
 
             // Check for existing entry and possible collisions.
-            $db->google_seo_query_limit--;
+            $google_seo_query_limit--;
             $query = $db->query("SELECT url,id FROM ".TABLE_PREFIX."google_seo
                                  WHERE active=1 AND idtype={$type} AND id<={$id}
                                  AND url IN ('"
@@ -515,7 +514,7 @@ function google_seo_url_create($type, $ids)
                 }
 
                 // Set old entries for us to not active.
-                $db->google_seo_query_limit--;
+                $google_seo_query_limit--;
                 $db->write_query("UPDATE ".TABLE_PREFIX."google_seo
                                   SET active=NULL
                                   WHERE active=1
@@ -523,7 +522,7 @@ function google_seo_url_create($type, $ids)
                                   AND id={$id}");
 
                 // Insert new entry (while possibly replacing old ones).
-                $db->google_seo_query_limit--;
+                $google_seo_query_limit--;
                 $db->write_query("REPLACE INTO ".TABLE_PREFIX."google_seo
                                   VALUES (active,idtype,id,url),
                                   ('1','{$type}','{$id}','".$db->escape_string($url)."')");
@@ -563,7 +562,7 @@ function google_seo_url_create($type, $ids)
 function google_seo_url_optimize($type, $id)
 {
     global $db, $mybb, $settings, $cache;
-    global $google_seo_url_optimize, $google_seo_url_cache;
+    global $google_seo_url_optimize, $google_seo_url_cache, $google_seo_url;
 
     switch(THIS_SCRIPT)
     {
@@ -589,7 +588,7 @@ function google_seo_url_optimize($type, $id)
                 }
             }
 
-            global $google_seo_index;
+            global $google_seo_index, $google_seo_query_limit;
 
             if(!$google_seo_index)
             {
@@ -603,7 +602,7 @@ function google_seo_url_optimize($type, $id)
                 if($mybb->settings['showwol'] != 0 && $mybb->usergroup['canviewonline'] != 0)
                 {
                     $timesearch = TIME_NOW - $mybb->settings['wolcutoff'];
-                    $db->google_seo_query_limit--;
+                    $google_seo_query_limit--;
                     $query = $db->query("SELECT uid FROM ".TABLE_PREFIX."sessions
                                          WHERE uid != '0' AND time > '$timesearch'");
 
@@ -857,7 +856,7 @@ function google_seo_url_optimize($type, $id)
     // Clean up
     foreach($google_seo_url_optimize as $key => $value)
     {
-        if(!$db->google_seo_url[$key]['scheme'])
+        if(!$google_seo_url[$key]['scheme'])
         {
             unset($google_seo_url_optimize[$key]);
         }
@@ -884,11 +883,11 @@ function google_seo_url_optimize($type, $id)
 function google_seo_url_cache($type, $id)
 {
     global $db, $settings;
-    global $google_seo_url_cache, $google_seo_url_lazy;
+    global $google_seo_url_cache, $google_seo_url_lazy, $google_seo_query_limit, $google_seo_url;
 
     // If it's not in the cache, try loading the cache.
     if((empty($google_seo_url_cache) || empty($google_seo_url_cache[$type]) || empty($google_seo_url_cache[$type][$id]))
-        && $db->google_seo_query_limit > 0)
+        && $google_seo_query_limit > 0)
     {
         $google_seo_url_cache['dirty'] = 1;
 
@@ -907,7 +906,7 @@ function google_seo_url_cache($type, $id)
 
             // Create a temporary placeholder (but working) URL.
             $url = google_seo_expand(
-                $db->google_seo_url[$type]['lazy'],
+                $google_seo_url[$type]['lazy'],
                 array('id' => $id)
                 );
 
@@ -952,7 +951,7 @@ function google_seo_url_cache($type, $id)
         $condition = implode(" OR ", $condition);
 
         // Run database query.
-        $db->google_seo_query_limit--;
+        $google_seo_query_limit--;
         $query = $db->query("SELECT $what
                              FROM ".TABLE_PREFIX."google_seo
                              WHERE active=1
@@ -965,7 +964,7 @@ function google_seo_url_cache($type, $id)
             $rowtype = (int)$row['idtype'];
             $google_seo_url_cache[$rowtype][$rowid] =
                 google_seo_url_finalize($row['url'],
-                                        $db->google_seo_url[$rowtype]['scheme']);
+                                        $google_seo_url[$rowtype]['scheme']);
             unset($ids[$rowtype][$rowid]);
         }
 
@@ -982,7 +981,7 @@ function google_seo_url_cache($type, $id)
     }
 
     // Return the cached entry for the originally requested type and id.
-    return @$google_seo_url_cache[$type][$id];
+    return $google_seo_url_cache[$type][$id];
 }
 
 /*
@@ -1086,9 +1085,9 @@ function google_seo_url_cache_hook()
  */
 function google_seo_url_id($type, $url)
 {
-    global $db, $settings;
+    global $db, $settings, $google_seo_query_limit;
 
-    $db->google_seo_query_limit--;
+    $google_seo_query_limit--;
     $query = $db->query("SELECT id
                          FROM ".TABLE_PREFIX."google_seo
                          WHERE idtype={$type}
@@ -1107,7 +1106,7 @@ function google_seo_url_id($type, $url)
             $urls[2] = $db->escape_string(google_seo_url_separate($urls[1]));
         }
 
-        $db->google_seo_query_limit--;
+        $google_seo_query_limit--;
         $query = $db->query("SELECT id
                              FROM ".TABLE_PREFIX."google_seo
                              WHERE idtype={$type}
@@ -1374,14 +1373,14 @@ function google_seo_url_merge_hook()
  */
 function google_seo_url_after_merge_hook($arguments)
 {
-    global $db;
+    global $db, $google_seo_query_limit;
 
     $mergetid = (int)$arguments['mergetid'];
     $tid = (int)$arguments['tid'];
 
     // Integrate mergetid into tid:
     $type = GOOGLE_SEO_THREAD;
-    $db->google_seo_query_limit--;
+    $google_seo_query_limit--;
     $db->write_query("UPDATE ".TABLE_PREFIX."google_seo
                       SET active=NULL, id={$tid}
                       WHERE idtype={$type} AND id={$mergetid}");
@@ -1502,12 +1501,12 @@ function google_seo_url_thread($tid, $page=0, $action='')
 function google_seo_url_post($pid, $tid=0)
 {
     global $db, $settings;
-    global $google_seo_url_tid;
+    global $google_seo_url_tid, $google_seo_query_limit;
 
     if($settings['google_seo_url_threads'] && $pid > 0)
     {
         $tid = google_seo_tid($pid, $tid, $settings['google_seo_url_posts'],
-                              $db->google_seo_query_limit);
+                              $google_seo_query_limit);
 
         if($tid > 0)
         {
