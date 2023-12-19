@@ -1630,6 +1630,8 @@ function google_seo_url_multipage($url)
             break;
     }
 
+    $newurl = $url;
+
     // The actual code that builds the new multipage URL:
     if(!empty($id))
     {
@@ -1661,10 +1663,6 @@ function google_seo_url_multipage($url)
                 }
             }
         }
-    }
-    else
-    {
-        $newurl = $url;
     }
 
     return $newurl;
