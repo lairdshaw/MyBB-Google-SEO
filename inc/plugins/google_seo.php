@@ -214,7 +214,7 @@ function google_seo_tid($pid, $tid=0, $mode='default', $limit=1)
             $tid = (int)$thread['tid'];
         }
 
-        else if(is_array($post) && $post['pid'] == $pid && $post['tid'] > 0)
+        else if(isset($post['pid']) && $post['pid'] == $pid && isset($post['tid']) && $post['tid'] > 0)
         {
             $tid = (int)$post['tid'];
         }
