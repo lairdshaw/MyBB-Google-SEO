@@ -193,7 +193,7 @@ function google_seo_expand($string, $array)
 function google_seo_tid($pid, $tid=0, $mode='default', $limit=1)
 {
     global $db, $style, $thread, $post;
-    global $google_seo_tid;
+    global $google_seo_tid, $google_seo_query_limit;
 
     if($google_seo_tid === NULL || $pid === NULL || !isset($google_seo_tid[$pid]))
     {
@@ -229,7 +229,7 @@ function google_seo_tid($pid, $tid=0, $mode='default', $limit=1)
            && ($mode == 'verify' || ($tid <= 0 && $mode != 'ignore')))
         {
             $pid = (int)$pid;
-            $db->google_seo_query_limit--;
+            $google_seo_query_limit--;
             $query = $db->simple_select('posts', 'tid', "pid={$pid}");
             $tid = (int)$db->fetch_field($query, 'tid');
 
