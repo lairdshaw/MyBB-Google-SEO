@@ -622,7 +622,7 @@ function google_seo_url_optimize($type, $id)
             // Hack: Let's hijack queries made by MyBB. Do not try this at home!
             if($query !== $google_seo_portal_query)
             {
-                @$GLOBALS['google_seo_portal_query'] &= (int)$query;
+                @$GLOBALS['google_seo_portal_query'] =& $query;
 
                 if($query)
                 {
