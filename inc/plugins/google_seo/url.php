@@ -1170,7 +1170,7 @@ function google_seo_url_hook()
             }
 
             // Verification.
-            $fid = (int)$mybb->get_input('fid');
+            $fid = $mybb->get_input('fid', MyBB::INPUT_INT);
 
             if($fid)
             {
@@ -1193,14 +1193,14 @@ function google_seo_url_hook()
             }
 
             // Verification.
-            $tid = $mybb->get_input('tid');
+            $tid = $mybb->get_input('tid', MyBB::INPUT_INT);
 
             if($tid)
             {
                 google_seo_url_create(GOOGLE_SEO_THREAD, $tid);
             }
 
-            $pid = (int)$mybb->get_input('pid');
+            $pid = $mybb->get_input('pid', MyBB::INPUT_INT);
 
             break;
 
@@ -1217,7 +1217,7 @@ function google_seo_url_hook()
             }
 
             // Verification.
-            $aid = (int)$mybb->get_input('aid');
+            $aid = $mybb->get_input('aid', MyBB::INPUT_INT);
 
             if($aid)
             {
@@ -1239,7 +1239,7 @@ function google_seo_url_hook()
             }
 
             // Verification.
-            $uid = (int)$mybb->get_input('uid');
+            $uid = $mybb->get_input('uid', MyBB::INPUT_INT);
 
             if($uid && $mybb->get_input('action') == 'profile')
             {
@@ -1262,7 +1262,7 @@ function google_seo_url_hook()
             }
 
             // Verification.
-            $eid = (int)$mybb->get_input('eid');
+            $eid = $mybb->get_input('eid', MyBB::INPUT_INT);
 
             if($eid)
             {
@@ -1292,7 +1292,7 @@ function google_seo_url_hook()
                 }
 
                 // Verification.
-                $cid = (int)$mybb->get_input('calendar');
+                $cid = $mybb->get_input('calendar', MyBB::INPUT_INT);
 
                 if($cid)
                 {

@@ -35,7 +35,7 @@ if(!defined("IN_MYBB"))
 global $mybb;
 
 if(THIS_SCRIPT == "misc.php"
-   && $mybb->input['google_seo_error'] == "404")
+   && $mybb->get_input('google_seo_error', MyBB::INPUT_INT) == 404)
 {
     if($mybb->settings['google_seo_404_wol_show'])
     {
@@ -221,7 +221,7 @@ function google_seo_404_page()
 {
     global $mybb, $lang;
 
-    if($mybb->input['google_seo_error'] == 404)
+    if($mybb->get_input('google_seo_error', MyBB::INPUT_INT) == 404)
     {
         error($lang->googleseo_404_notfound);
     }
