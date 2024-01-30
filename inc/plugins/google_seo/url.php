@@ -1052,12 +1052,12 @@ function google_seo_url_cache_hook()
     global $google_seo_url_cache;
 
     // Do we need to update the cache?
-    if($google_seo_url_cache['dirty'])
+    if(!empty($google_seo_url_cache['dirty']))
     {
         unset($google_seo_url_cache['dirty']);
 
         // New cache?
-        if(!$google_seo_url_cache['time'])
+        if(empty($google_seo_url_cache['time']))
         {
             $delta = (int)$settings['google_seo_url_cache'];
 
