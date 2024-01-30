@@ -1415,7 +1415,7 @@ function google_seo_plugin_database()
     $group = 'GROUP BY idtype,active';
     $order = 'ORDER BY idtype,active';
 
-    if($mybb->input['optimize'] == 1)
+    if($mybb->get_input('optimize', MyBB::INPUT_INT) == 1)
     {
         // Delete unused entries.
         $db->delete_query('google_seo', "NOT {$exists}");

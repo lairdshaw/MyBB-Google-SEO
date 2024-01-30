@@ -97,8 +97,8 @@ function google_seo_redirect_hook()
     switch (THIS_SCRIPT)
     {
         case 'forumdisplay.php':
-            $fid = (int)$mybb->get_input('fid');
-            $page = (int)$mybb->get_input('page');
+            $fid = $mybb->get_input('fid', MyBB::INPUT_INT);
+            $page = $mybb->get_input('page', MyBB::INPUT_INT);
 
             if ($fid)
             {
@@ -130,27 +130,27 @@ function google_seo_redirect_hook()
         case 'showthread.php':
             // pid overrules tid, so we must check pid first,
             // even at the cost of an additional query.
-            if ((int)$mybb->get_input('pid'))
+            if ($mybb->get_input('pid', MyBB::INPUT_INT))
             {
                 $tid = google_seo_tid(
-                    (int)$mybb->get_input('pid'),
-                    (int)$mybb->get_input('tid'),
+                    $mybb->get_input('pid', MyBB::INPUT_INT),
+                    $mybb->get_input('tid', MyBB::INPUT_INT),
                     $settings['google_seo_redirect_posts']
                 );
 
-                $target = get_post_link((int)$mybb->get_input('pid'), $tid);
+                $target = get_post_link($mybb->get_input('pid', MyBB::INPUT_INT), $tid);
                 $kill['pid'] = '';
                 $kill['tid'] = '';
                 $kill['google_seo_thread'] = '';
                 $kill['google_seo'] = '';
             }
 
-            else if ((int)$mybb->get_input('tid'))
+            else if ($mybb->get_input('tid', MyBB::INPUT_INT))
             {
                 $target = get_thread_link(
-                    (int)$mybb->get_input('tid'),
-                    (int)$mybb->get_input('page'),
-                    (string)$mybb->get_input('action')
+                    $mybb->get_input('tid', MyBB::INPUT_INT),
+                    $mybb->get_input('page', MyBB::INPUT_INT),
+                    $mybb->get_input('action')
                 );
 
                 $kill['tid'] = '';
@@ -167,9 +167,9 @@ function google_seo_redirect_hook()
             break;
 
         case 'announcements.php':
-            if ((int)$mybb->get_input('aid'))
+            if ($mybb->get_input('aid', MyBB::INPUT_INT))
             {
-                $target = get_announcement_link((int)$mybb->get_input('aid'));
+                $target = get_announcement_link($mybb->get_input('aid', MyBB::INPUT_INT));
                 $kill['aid'] = '';
                 $kill['google_seo_announcement'] = '';
                 $kill['google_seo'] = '';
@@ -178,7 +178,7 @@ function google_seo_redirect_hook()
             break;
 
         case 'member.php':
-            if ((int)$mybb->get_input('uid'))
+            if ($mybb->get_input('uid', MyBB::INPUT_INT))
             {
                 if (
                     $settings['google_seo_redirect_litespeed']
@@ -189,7 +189,7 @@ function google_seo_redirect_hook()
                     break;
                 }
 
-                $target = get_profile_link((int)$mybb->get_input('uid'));
+                $target = get_profile_link($mybb->get_input('uid', MyBB::INPUT_INT));
                 $kill['uid'] = '';
                 $kill['google_seo_user'] = '';
                 $kill['google_seo'] = '';
@@ -203,7 +203,7 @@ function google_seo_redirect_hook()
             break;
 
         case 'calendar.php':
-            if ((int)$mybb->get_input('eid'))
+            if ($mybb->get_input('eid', MyBB::INPUT_INT))
             {
                 if (
                     $settings['google_seo_redirect_litespeed']
@@ -214,7 +214,7 @@ function google_seo_redirect_hook()
                     break;
                 }
 
-                $target = get_event_link((int)$mybb->get_input('eid'));
+                $target = get_event_link($mybb->get_input('eid', MyBB::INPUT_INT));
                 $kill['eid'] = '';
                 $kill['google_seo_event'] = '';
                 $kill['google_seo'] = '';
@@ -227,7 +227,7 @@ function google_seo_redirect_hook()
 
             else
             {
-                if (!(int)$mybb->get_input('calendar'))
+                if (!$mybb->get_input('calendar', MyBB::INPUT_INT))
                 {
                     // Special case: Default calendar.
                     // Code taken from calendar.php
@@ -247,7 +247,7 @@ function google_seo_redirect_hook()
                 if ($mybb->get_input('action') == "weekview")
                 {
                     $target = get_calendar_week_link(
-                        (int)$mybb->get_input('calendar'),
+                        $mybb->get_input('calendar', MyBB::INPUT_INT),
                         (int)str_replace('n', '-', $mybb->get_input('week'))
                     );
                     $kill['calendar'] = '';
@@ -260,10 +260,10 @@ function google_seo_redirect_hook()
                 else
                 {
                     $target = get_calendar_link(
-                        (int)$mybb->get_input('calendar'),
-                        (int)$mybb->get_input('year'),
-                        (int)$mybb->get_input('month'),
-                        (int)$mybb->get_input('day')
+                        $mybb->get_input('calendar', MyBB::INPUT_INT),
+                        $mybb->get_input('year', MyBB::INPUT_INT),
+                        $mybb->get_input('month', MyBB::INPUT_INT),
+                        $mybb->get_input('day', MyBB::INPUT_INT)
                     );
                     $kill['calendar'] = '';
                     $kill['year'] = '';

@@ -492,7 +492,7 @@ function google_seo_sitemap_hook()
         return;
     }
 
-    $type = $mybb->input['google_seo_sitemap'];
+    $type = $mybb->get_input('google_seo_sitemap');
 
     if($type != "index" && !$settings["google_seo_sitemap_{$type}"])
     {
@@ -511,7 +511,7 @@ function google_seo_sitemap_hook()
     }
 
     // Set page to something between 0 and 50000.
-    $page = (int)$mybb->input['page'];
+    $page = $mybb->get_input('page', MyBB::INPUT_INT);
     $page = min(max($page, 0), 50000);
 
     if($type == "index")
