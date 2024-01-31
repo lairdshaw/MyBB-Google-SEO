@@ -1,16 +1,27 @@
-==================================================
- Google Search Engine Optimization Plugin for MyBB
-==================================================
+====================================================================
+ Google Search Engine Optimization Plugin for MyBB Updated for PHP 8
+====================================================================
 
 End User Manual
 ===============
 
 :Author: Andreas Klauer <Andreas.Klauer@metamorpher.de>
-:Version: 1.8.4 of 2020 Aug 09
-:Homepage: https://github.com/frostschutz/MyBB-Google-SEO
+:Fork Maintainers: Omar G <https://omarg.me/> and Laird Shaw <http://creativeandcritical.net/>
+:Version: 1.8.5 of 2024 Jan 31
+:Fork Homepage: https://github.com/Sama34/MyBB-Google-SEO
+:Original Homepage: https://github.com/frostschutz/MyBB-Google-SEO
 
 .. contents::
   :backlinks: top
+
+Fork note
+---------
+
+This plugin was forked by Omar and Laird with Andreas's go-ahead. The purpose of
+the fork is solely to provide fixes, primarily of warnings under PHP 8. Andreas
+did not have the time available to perform this task himself.
+
+From here on, this document contains no changes from the pre-fork version.
 
 About
 -----

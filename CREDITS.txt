@@ -7,3 +7,4 @@ Special thanks to:
 - "steve" at dedduck.com who donated in March 2011,
 - "Einars" at GIMPForums.com who donated in August 2011,
 - "Pompano" at rskingdom.com who donated in October 2011,
+- "SvePu" for many PHP 8 fixes
