@@ -282,6 +282,8 @@ function google_seo_dynamic($url)
             }
         }
     }
+
+    return '';
 }
 
 /*
