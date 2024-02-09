@@ -6,7 +6,7 @@ End User Manual
 ===============
 
 :Author: Andreas Klauer <Andreas.Klauer@metamorpher.de>
-:Fork Maintainers: Omar G <https://omarg.me/> and Laird Shaw <http://creativeandcritical.net/>
+:Fork Maintainers: Omar G <https://omarg.me/> and Laird Shaw <https://creativeandcritical.net/>
 :Version: 1.8.5 of 2024 Jan 31
 :Fork Homepage: https://github.com/Sama34/MyBB-Google-SEO
 :Original Homepage: https://github.com/frostschutz/MyBB-Google-SEO
