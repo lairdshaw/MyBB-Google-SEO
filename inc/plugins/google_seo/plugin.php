@@ -48,8 +48,8 @@ function google_seo_plugin_info()
     google_seo_plugin_edit();
 
     $info = array(
-        "name"          => "Google SEO",
-        "website"       => "https://github.com/frostschutz/MyBB-Google-SEO",
+        "name"          => "Google SEO (Updated for PHP 8)",
+        "website"       => "https://github.com/Sama34/MyBB-Google-SEO",
         "description"   => "{$lang->googleseo_plugin_description}",
         "author"        => "Andreas Klauer",
         "authorsite"    => "mailto:Andreas.Klauer@metamorpher.de",
