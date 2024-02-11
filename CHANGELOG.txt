@@ -1,4 +1,8 @@
-2024-01-31: stable release 1.8.5
+2024-02-11: stable release 1.8.6
+
+    * correct the new codename for this fork: digits are invalid
+
+2024-02-11: stable release 1.8.5
 
     * fix various warnings that occur under PHP 8
 
