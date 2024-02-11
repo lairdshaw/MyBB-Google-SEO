@@ -48,15 +48,15 @@ function google_seo_plugin_info()
     google_seo_plugin_edit();
 
     $info = array(
-        "name"          => "Google SEO",
-        "website"       => "https://github.com/frostschutz/MyBB-Google-SEO",
+        "name"          => "Google SEO (Updated for PHP 8)",
+        "website"       => "https://github.com/Sama34/MyBB-Google-SEO",
         "description"   => "{$lang->googleseo_plugin_description}",
         "author"        => "Andreas Klauer",
         "authorsite"    => "mailto:Andreas.Klauer@metamorpher.de",
-        "version"       => "1.8.4",
+        "version"       => "1.8.5",
         "guid"          => "8d12371391e1c95392dd567617e40f7f",
         "compatibility" => "*",
-        "codename"      => "google_seo",
+        "codename"      => "google_seo_updated_for_php8",
     );
 
     // Provide some additional status information, if the plugin is enabled.
