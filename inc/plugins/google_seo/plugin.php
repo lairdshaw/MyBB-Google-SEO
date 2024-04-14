@@ -49,11 +49,11 @@ function google_seo_plugin_info()
 
     $info = array(
         "name"          => "Google SEO (Updated for PHP 8)",
-        "website"       => "https://github.com/Sama34/MyBB-Google-SEO",
+        "website"       => "https://github.com/mybbgroup/MyBB-Google-SEO",
         "description"   => "{$lang->googleseo_plugin_description}",
         "author"        => "Andreas Klauer",
         "authorsite"    => "mailto:Andreas.Klauer@metamorpher.de",
-        "version"       => "1.8.6",
+        "version"       => "1.8.6-postrelease",
         "guid"          => "8d12371391e1c95392dd567617e40f7f",
         "compatibility" => "*",
         "codename"      => "google_seo_php_eight_update",

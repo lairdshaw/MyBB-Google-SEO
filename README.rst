@@ -6,9 +6,9 @@ End User Manual
 ===============
 
 :Author: Andreas Klauer <Andreas.Klauer@metamorpher.de>
-:Fork Maintainers: Omar G <https://omarg.me/> and Laird Shaw <https://creativeandcritical.net/>
-:Version: 1.8.6 of 2024 Feb 11
-:Fork Homepage: https://github.com/Sama34/MyBB-Google-SEO
+:Fork Maintainers: The unofficial MyBB Group <https://mybb.group>, especially Omar G <https://omarg.me/> and Laird Shaw <https://creativeandcritical.net/>
+:Version: 1.8.6-postrelease of 2024 Apr 14
+:Fork Homepage: https://github.com/mybbgroup/MyBB-Google-SEO
 :Original Homepage: https://github.com/frostschutz/MyBB-Google-SEO
 
 .. contents::
@@ -17,9 +17,10 @@ End User Manual
 Fork note
 ---------
 
-This plugin was forked by Omar and Laird with Andreas's go-ahead. The purpose of
-the fork is solely to provide fixes, primarily of warnings under PHP 8. Andreas
-did not have the time available to perform this task himself.
+This plugin was forked by Omar and Laird with Andreas's go-ahead, and is now
+maintained by the unofficial MyBB Group. The purpose of the fork is solely to
+provide fixes, primarily of warnings under PHP 8. Andreas did not have the time
+available to perform this task himself.
 
 From here on, this document contains no changes from the pre-fork version.
 
