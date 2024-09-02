@@ -94,20 +94,20 @@ function google_seo_sitemap($tag, $items)
         // lastmod
         // Hack: set earliest possible date to april 1970,
         //       takes care of cid showing up as date.
-        if($item['lastmod'] > 10000000)
+        if(isset($item['lastmod']) && $item['lastmod'] > 10000000)
         {
             $lastmod = gmdate('Y-m-d\TH:i\Z', $item['lastmod']);
             $output[] = "    <lastmod>$lastmod</lastmod>";
         }
 
         // changefreq
-        if($item['changefreq'])
+        if(!empty($item['changefreq']))
         {
             $output[] = "    <changefreq>{$item['changefreq']}</changefreq>";
         }
 
         // priority
-        if($item['priority'])
+        if(!empty($item['priority']))
         {
             $output[] = "    <priority>{$item['priority']}</priority>";
         }
@@ -150,6 +150,7 @@ function google_seo_sitemap_gen($scheme, $type, $page, $pagination)
         return;
     }
 
+    $pagescount = '';
     switch($type)
     {
         case "forums":
@@ -322,6 +323,8 @@ function google_seo_sitemap_gen($scheme, $type, $page, $pagination)
 
     if(!$page)
     {
+        $items = [];
+
         // Do a pagination index.
         $query = $db->simple_select($table,
                                     "MAX({$datename}) AS lastmod, FLOOR({$idname}/{$pagination}.0)+1 AS page",
