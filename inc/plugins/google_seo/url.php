@@ -980,8 +980,8 @@ function google_seo_url_cache($type, $id)
         }
     }
 
-    // Return the cached entry for the originally requested type and id.
-    return $google_seo_url_cache[$type][$id];
+    // Return the cached entry for the originally requested type and id if we have it.
+    return isset($google_seo_url_cache[$type][$id]) ? $google_seo_url_cache[$type][$id] : 0;
 }
 
 /*
