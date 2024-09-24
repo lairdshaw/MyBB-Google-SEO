@@ -787,63 +787,61 @@ function google_seo_url_optimize($type, $id)
             break;
 
         case 'online.php':
-            if($settings['google_seo_url_wol'])
+            global $uid_list, $aid_list, $eid_list, $fid_list, $tid_list, $google_seo_uid_list, $google_seo_aid_list,
+                   $google_seo_eid_list, $google_seo_fid_list, $google_seo_tid_list;
+
+            // uid_list
+            if(!empty($uid_list) && count($uid_list) && $uid_list !== $google_seo_uid_list)
             {
-                global $uid_list, $aid_list, $eid_list, $fid_list, $tid_list;
+                $GLOBALS['google_seo_uid_list'] =& $uid_list;
 
-                // uid_list
-                if(count($uid_list) && $uid_list !== $google_seo_uid_list)
+                foreach($uid_list as $uid)
                 {
-                    $GLOBALS['google_seo_uid_list'] =& $uid_list;
-
-                    foreach($uid_list as $uid)
-                    {
-                        $google_seo_url_optimize[GOOGLE_SEO_USER][$uid] = 0;
-                    }
+                    $google_seo_url_optimize[GOOGLE_SEO_USER][$uid] = 0;
                 }
+            }
 
-                // aid_list
-                if(count($aid_list) && $aid_list !== $google_seo_aid_list)
+            // aid_list
+            if(!empty($aid_list) && count($aid_list) && $aid_list !== $google_seo_aid_list)
+            {
+                $GLOBALS['google_seo_aid_list'] =& $aid_list;
+
+                foreach($aid_list as $aid)
                 {
-                    $GLOBALS['google_seo_aid_list'] =& $aid_list;
-
-                    foreach($aid_list as $aid)
-                    {
-                        $google_seo_url_optimize[GOOGLE_SEO_ANNOUNCEMENT][$aid] = 0;
-                    }
+                    $google_seo_url_optimize[GOOGLE_SEO_ANNOUNCEMENT][$aid] = 0;
                 }
+            }
 
-                // eid_list
-                if(count($eid_list) && $eid_list !== $google_seo_eid_list)
+            // eid_list
+            if(!empty($eid_list) && count($eid_list) && $eid_list !== $google_seo_eid_list)
+            {
+                $GLOBALS['google_seo_eid_list'] =& $eid_list;
+
+                foreach($eid_list as $eid)
                 {
-                    $GLOBALS['google_seo_eid_list'] =& $eid_list;
-
-                    foreach($eid_list as $eid)
-                    {
-                        $google_seo_url_optimize[GOOGLE_SEO_EVENT][$eid] = 0;
-                    }
+                    $google_seo_url_optimize[GOOGLE_SEO_EVENT][$eid] = 0;
                 }
+            }
 
-                // fid_list
-                if(count($fid_list) && $fid_list !== $google_seo_fid_list)
+            // fid_list
+            if(!empty($fid_list) && count($fid_list) && $fid_list !== $google_seo_fid_list)
+            {
+                $GLOBALS['google_seo_fid_list'] =& $fid_list;
+
+                foreach($fid_list as $fid)
                 {
-                    $GLOBALS['google_seo_fid_list'] =& $fid_list;
-
-                    foreach($fid_list as $fid)
-                    {
-                        $google_seo_url_optimize[GOOGLE_SEO_FORUM][$fid] = 0;
-                    }
+                    $google_seo_url_optimize[GOOGLE_SEO_FORUM][$fid] = 0;
                 }
+            }
 
-                // tid_list
-                if(count($tid_list) && $tid_list !== $google_seo_tid_list)
+            // tid_list
+            if(!empty($tid_list) && count($tid_list) && $tid_list !== $google_seo_tid_list)
+            {
+                $GLOBALS['google_seo_tid_list'] =& $tid_list;
+
+                foreach($tid_list as $tid)
                 {
-                    $GLOBALS['google_seo_tid_list'] =& $tid_list;
-
-                    foreach($tid_list as $tid)
-                    {
-                        $google_seo_url_optimize[GOOGLE_SEO_THREAD][$tid] = 0;
-                    }
+                    $google_seo_url_optimize[GOOGLE_SEO_THREAD][$tid] = 0;
                 }
             }
 
