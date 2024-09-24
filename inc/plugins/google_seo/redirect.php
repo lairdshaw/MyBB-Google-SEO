@@ -382,7 +382,7 @@ function google_seo_redirect_hook()
                     && $mybb->usergroup['cancp'] == 1
                 )
                 {
-                    if ($query['google_seo_redirect'])
+                    if (!empty($query['google_seo_redirect']))
                     {
                         // print out information about this redirect and return
                         header("Content-type: text/html; charset=UTF-8");
