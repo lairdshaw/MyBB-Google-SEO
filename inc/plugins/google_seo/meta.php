@@ -112,6 +112,10 @@ function google_seo_meta_page($page)
 
     if($page > 1 && $settings['google_seo_meta_page'])
     {
+        // This will test true when archive/index.php is requested.
+        if (!isset($lang->googleseo_meta_page)) {
+            google_seo_lang();
+        }
         $google_seo_page = google_seo_expand(
             $settings['google_seo_meta_page'],
             array(
@@ -279,6 +283,10 @@ function google_seo_meta_posts(&$mypost)
 
     if($mypost['dateline'] > $google_seo_nofollow)
     {
+        if (!isset($mypost['button_www']))
+        {
+                $mypost['button_www'] = '';
+        }
         $mypost['message'] = google_seo_meta_nofollow($mypost['message']);
         $mypost['button_www'] = google_seo_meta_nofollow($mypost['button_www']);
         $mypost['signature'] = google_seo_meta_nofollow($mypost['signature']);
