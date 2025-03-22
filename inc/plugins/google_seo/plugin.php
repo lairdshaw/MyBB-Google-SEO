@@ -107,7 +107,7 @@ function google_seo_plugin_status()
     }
 
     // UTF-8 is required:
-    if($mybb->config['database']['encoding'] != 'utf8mb4')
+    if(!empty($mybb->config['database']) && $mybb->config['database']['encoding'] != 'utf8mb4')
     {
         $warning[] = $lang->sprintf($lang->googleseo_plugin_warn_encoding,
                                     $mybb->config['database']['encoding']);
@@ -150,7 +150,10 @@ function google_seo_plugin_status()
         }
 
         $current_url = google_seo_redirect_current_url();
-        $pos = my_strpos($current_url, "/{$config['admin_dir']}/index.php");
+
+        $admin_dir = !empty($config['admin_dir']) ?  '/'. $config['admin_dir'] : '';
+
+        $pos = my_strpos($current_url, "{$admin_dir}/index.php");
 
         if($pos)
         {
@@ -382,7 +385,7 @@ function google_seo_plugin_status()
 
                     else
                     {
-                        $rule = "RewriteRule ^{$rule}\$ {$v[1]}?{$v[4]} [L,QSA,NC]";
+                        $rule = "RewriteRule ^{$rule}\$ {$v[1]}?".($v[4] ?? '')." [L,QSA,NC]";
                     }
 
                     if(strpos($file, "{$rule}\n") === false)

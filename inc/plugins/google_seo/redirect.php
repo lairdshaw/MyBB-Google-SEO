@@ -315,9 +315,9 @@ function google_seo_redirect_hook()
             }
 
             // Query
-            $current_dynamic = google_seo_dynamic('?' . $current_parse[1]);
-            $target_dynamic = google_seo_dynamic('?' . $target_parse[1]);
-            parse_str(htmlspecialchars_decode($target_parse[1]), $query_target);
+            $current_dynamic = google_seo_dynamic('?' . ($current_parse[1] ?? ''));
+            $target_dynamic = google_seo_dynamic('?' . ($target_parse[1] ?? ''));
+            parse_str(isset($target_parse[1]) ? htmlspecialchars_decode($target_parse[1]) : '', $query_target);
             parse_str($current_parse[1], $query_current);
 
             if ((ini_get('magic_quotes_gpc') && (strtolower(ini_get('magic_quotes_gpc')) != "off")))

@@ -109,7 +109,7 @@ if(defined("IN_ADMINCP"))
 
         // Kill the cache when someone changes URL settings the obvious way.
         // Otherwise the cache may cause unnecessary redirects.
-        if(array_key_exists('google_seo_url_threads', $mybb->input['upsetting']))
+        if(array_key_exists('google_seo_url_threads', $mybb->get_input('upsetting', \MyBB::INPUT_ARRAY)))
         {
             $cache->update('google_seo_url', NULL);
         }

@@ -358,7 +358,7 @@ function google_seo_sitemap_gen($scheme, $type, $page, $pagination)
         $ids[] = $id;
         $dates[$id] = $row[$datename];
 
-        if($pagescount)
+        if(!empty($pagescount))
         {
             $pages[$id] = (int)(($row['pagescount']-1) / $perpage) + 1;
         }
