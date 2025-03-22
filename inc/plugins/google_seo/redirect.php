@@ -315,8 +315,8 @@ function google_seo_redirect_hook()
             }
 
             // Query
-            $current_dynamic = google_seo_dynamic('?' . ($current_parse[1] ?? ''));
-            $target_dynamic = google_seo_dynamic('?' . ($target_parse[1] ?? ''));
+            $current_dynamic = google_seo_dynamic('?' . (isset($current_parse[1]) ? $current_parse[1] : ''));
+            $target_dynamic = google_seo_dynamic('?' . (isset($target_parse[1]) ? $target_parse[1] : ''));
             parse_str(isset($target_parse[1]) ? htmlspecialchars_decode($target_parse[1]) : '', $query_target);
             parse_str($current_parse[1], $query_current);
 

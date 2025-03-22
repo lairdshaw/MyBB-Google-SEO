@@ -385,7 +385,7 @@ function google_seo_plugin_status()
 
                     else
                     {
-                        $rule = "RewriteRule ^{$rule}\$ {$v[1]}?".($v[4] ?? '')." [L,QSA,NC]";
+                        $rule = "RewriteRule ^{$rule}\$ {$v[1]}?".(isset($v[4]) ? $v[4] : '')." [L,QSA,NC]";
                     }
 
                     if(strpos($file, "{$rule}\n") === false)
